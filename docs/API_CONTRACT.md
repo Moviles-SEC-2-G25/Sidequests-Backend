@@ -15,9 +15,30 @@ Both Kotlin and Flutter use the same Supabase project.
 - A user can create/update only their own `user_quests`.
 - Analytics events are append-only from mobile clients.
 - Mobile clients cannot edit the quest catalogue directly.
+- Authenticated users can insert and read proof records only for their own attempts
+  and photo-required steps. Proof records cannot be changed or deleted by a client.
 
 ## Shared rule
 Changes to database structure or shared server-side behavior must be versioned in this repository before both clients depend on them.
+
+## Quest photo proof
+
+Migration `009_quest_photo_proofs.sql` creates the private `quest-proofs` Storage bucket
+and `public.quest_photo_proofs`. An authenticated client uploads a JPEG to:
+
+```text
+<user-id>/<attempt-id>/<quest-id>/step-<1-based-step-number>-<uuid>.jpg
+```
+
+After upload, insert into `quest_photo_proofs` with `attempt_id`, zero-based
+`step_order`, and `storage_path`. Only report success after that insert succeeds.
+If it fails, delete the newly uploaded object and allow a retry. Read the table
+by `attempt_id` to find evidence; use an authenticated Storage download or signed
+URL, never a public URL. The bucket accepts JPEGs up to 25 MiB. The server checks
+that the attempt belongs to the user and the step requires a photo.
+
+The optional `SUPABASE_QUEST_PROOFS_BUCKET` client setting must remain
+`quest-proofs` unless a matching bucket and policies are deployed.
 
 ## Recommendations (BQ5 / BQ8)
 
