@@ -45,6 +45,9 @@ Migration 009 versions the private `quest-proofs` bucket, its ownership policies
 and per-step proof records for Kotlin and Flutter. Committing the migration does
 not deploy it: apply it to the shared Supabase project before testing photo upload.
 
+See [photo proof validation](docs/PHOTO_PROOF_VALIDATION.md) for local policy tests
+(`npm ci`, `npm test`) and the Kotlin runtime handoff.
+
 ## Important
 
 Do not commit service-role or secret keys. Mobile clients must use only the Supabase publishable key.
