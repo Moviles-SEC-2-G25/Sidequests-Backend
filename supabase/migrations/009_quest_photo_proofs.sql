@@ -20,7 +20,7 @@ create index quest_photo_proofs_attempt_step_idx
 on public.quest_photo_proofs (attempt_id, step_order, uploaded_at desc);
 
 alter table public.quest_photo_proofs enable row level security;
-revoke all on public.quest_photo_proofs from anon;
+revoke all on public.quest_photo_proofs from public, anon, authenticated;
 grant select, insert on public.quest_photo_proofs to authenticated;
 
 create policy "quest_photo_proofs_select_own"
@@ -47,7 +47,7 @@ with check (
       and split_part(storage_path, '/', 2) = uq.id::text
       and split_part(storage_path, '/', 3) = uq.quest_id
       and split_part(storage_path, '/', 4) like 'step-' || (step_order + 1)::text || '-%.jpg'
-      and split_part(storage_path, '/', 5) = ''
+      and array_length(string_to_array(storage_path, '/'), 1) = 4
       and exists (
         select 1 from storage.objects so
         where so.bucket_id = 'quest-proofs' and so.name = storage_path
@@ -71,7 +71,7 @@ with check (
       and uq.quest_id = (storage.foldername(name))[3]
       and qs.verification_type in ('photo', 'photo_and_location')
       and split_part(name, '/', 4) like 'step-' || (qs.step_order + 1)::text || '-%.jpg'
-      and split_part(name, '/', 5) = ''
+      and array_length(string_to_array(name, '/'), 1) = 4
   )
 );
 
