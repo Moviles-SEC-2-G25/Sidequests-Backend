@@ -7,7 +7,13 @@
 - `quests`: shared Sidequest catalogue used by Kotlin and Flutter.
 - `quest_steps`: ordered steps for each quest.
 - `user_quests`: per-user quest state, progress and completion/abandonment data.
+- `quest_photo_proofs`: private Storage object path for each uploaded photo, linked to
+  one quest attempt and one zero-based photo-required step. Multiple captures of a
+  step are retained as separate rows; the newest `uploaded_at` is the latest proof.
 - `analytics_events`: append-only event stream used by the analytics engine and Business Questions.
+
+`user_quests.photo_proof_path` is a legacy single-path field; new clients should use
+`quest_photo_proofs` so multi-photo quests do not lose evidence from earlier steps.
 
 ## Ownership
 

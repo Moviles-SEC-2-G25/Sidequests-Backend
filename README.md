@@ -7,7 +7,7 @@ Shared backend for the Sidequests Kotlin and Flutter applications.
 - Supabase Auth
 - PostgreSQL
 - Row Level Security (RLS)
-- Supabase Storage (when needed)
+- Supabase Storage (private quest photo proofs)
 - Supabase Edge Functions for shared server-side integrations
 
 Both mobile clients use the same Supabase project and the same data model.
@@ -19,7 +19,9 @@ supabase/
 ├── migrations/
 │   ├── 001_foundation_schema_rls.sql
 │   ├── 002_security_and_index_hardening.sql
-│   └── 003_make_quest_coordinates_optional.sql
+│   ├── 003_make_quest_coordinates_optional.sql
+│   ├── ...
+│   └── 009_quest_photo_proofs.sql
 ├── seed.sql
 └── functions/
     └── context-weather/
@@ -38,6 +40,13 @@ docs/
 - Kotlin app validated reading the remote catalogue.
 - RLS enabled on all exposed application tables.
 - Supabase Security Advisor currently reports no security warnings.
+
+Migration 009 versions the private `quest-proofs` bucket, its ownership policies,
+and per-step proof records for Kotlin and Flutter. Committing the migration does
+not deploy it: apply it to the shared Supabase project before testing photo upload.
+
+See [photo proof validation](docs/PHOTO_PROOF_VALIDATION.md) for local policy tests
+(`npm ci`, `npm test`) and the Kotlin runtime handoff.
 
 ## Important
 

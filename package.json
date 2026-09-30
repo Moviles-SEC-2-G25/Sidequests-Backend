@@ -1,0 +1,11 @@
+{
+  "name": "sidequests-backend-validation",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/quest-photo-proofs.test.mjs"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "0.5.8"
+  }
+}
