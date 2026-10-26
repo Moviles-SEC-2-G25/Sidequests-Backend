@@ -24,6 +24,14 @@ on conflict (id) do update set
   is_sponsored=excluded.is_sponsored, sponsor_name=excluded.sponsor_name,
   is_group=excluded.is_group, is_active=excluded.is_active;
 
+-- BQ12 records the business type independently of the activity type.
+-- Running the seed after migration 010 must preserve this classification.
+update public.quests
+set sponsor_business_category = 'fitness_and_recreation'
+where id = 'sponsored-climbing'
+  and sponsor_name = 'Boulder Box'
+  and is_sponsored = true;
+
 insert into public.quest_steps (quest_id, step_order, title, description, verification_type) values
 ('botanical-garden',0,'Find the conservatory entrance','Head to the main conservatory and grab a free map from the welcome stand.','none'),
 ('botanical-garden',1,'Spot 3 plants you''ve never seen','Wander through the tropical wing and find three plants that are totally new to you.','none'),
