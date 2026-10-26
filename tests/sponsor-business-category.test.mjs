@@ -7,7 +7,6 @@ test('sponsor industry is separate from quest activity and old rows remain compa
   const db = new PGlite();
   try {
     await db.exec(`
-      create schema public;
       create table public.quests (
         id text primary key,
         category text not null,
@@ -37,13 +36,6 @@ test('sponsor industry is separate from quest activity and old rows remain compa
       set sponsor_business_category = 'cafe'
       where id = 'regular-quest'
     `));
-    await db.exec(sql.replace(
-      /alter table public\.quests\s+add constraint[\s\S]*?;\n\ncomment on column/,
-      'comment on column',
-    ).replace(
-      /comment on column public\.quests\.sponsor_business_category[\s\S]*?;\n\n/,
-      '',
-    ));
   } finally {
     await db.close();
   }
