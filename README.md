@@ -21,7 +21,8 @@ supabase/
 │   ├── 002_security_and_index_hardening.sql
 │   ├── 003_make_quest_coordinates_optional.sql
 │   ├── ...
-│   └── 009_quest_photo_proofs.sql
+│   ├── 009_quest_photo_proofs.sql
+│   └── 010_bq12_sponsored_quests.sql
 ├── seed.sql
 └── functions/
     └── context-weather/
@@ -44,6 +45,10 @@ docs/
 Migration 009 versions the private `quest-proofs` bucket, its ownership policies,
 and per-step proof records for Kotlin and Flutter. Committing the migration does
 not deploy it: apply it to the shared Supabase project before testing photo upload.
+
+Migration 010 adds `quests.sponsor_business_category` and five fictional sponsored
+quests (plus the existing Boulder Box one) across six business categories, for BQ12
+(sponsored quest performance). Like 009, it must be applied to the shared project.
 
 See [photo proof validation](docs/PHOTO_PROOF_VALIDATION.md) for local policy tests
 (`npm ci`, `npm test`) and the Kotlin runtime handoff.

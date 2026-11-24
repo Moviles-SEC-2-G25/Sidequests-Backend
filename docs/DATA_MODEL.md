@@ -4,7 +4,9 @@
 
 - `profiles`: one application profile per Supabase Auth user.
 - `user_preferences`: interests, difficulty, time, budget, social and location preferences.
-- `quests`: shared Sidequest catalogue used by Kotlin and Flutter.
+- `quests`: shared Sidequest catalogue used by Kotlin and Flutter. Sponsored quests
+  have `is_sponsored`, `sponsor_name` and (migration 010) `sponsor_business_category`,
+  the sponsor's business type from a fixed vocabulary (see `API_CONTRACT.md`).
 - `quest_steps`: ordered steps for each quest.
 - `user_quests`: per-user quest state, progress and completion/abandonment data.
 - `quest_photo_proofs`: private Storage object path for each uploaded photo, linked to
