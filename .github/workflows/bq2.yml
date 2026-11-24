@@ -1,0 +1,25 @@
+name: BQ2 PostgreSQL integration
+on: [push, pull_request]
+jobs:
+  bq2:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      PGPASSWORD: test
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          psql -h localhost -U postgres -v ON_ERROR_STOP=1 -f tests/bq2_fixture.sql
+          psql -h localhost -U postgres -v ON_ERROR_STOP=1 -f supabase/migrations/011_group_challenges.sql
+          psql -h localhost -U postgres -v ON_ERROR_STOP=1 -f tests/bq2_integration.sql
