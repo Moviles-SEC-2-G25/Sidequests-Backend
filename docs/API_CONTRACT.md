@@ -21,6 +21,25 @@ Both Kotlin and Flutter use the same Supabase project.
 ## Shared rule
 Changes to database structure or shared server-side behavior must be versioned in this repository before both clients depend on them.
 
+## Sponsored quests (BQ12)
+
+Migration `010_bq12_sponsored_quests.sql` adds `quests.sponsor_business_category`
+next to `is_sponsored` and `sponsor_name`. Clients read it like any other quest
+column; no new endpoint, RPC or policy exists.
+
+- `is_sponsored = true` quests must always be shown marked as sponsored
+  (Kotlin: `SPONSORED` pill; Flutter: `Patrocinada` badge and "Patrocinada por
+  <sponsor_name>" in the detail view).
+- `sponsor_business_category` is null for non-sponsored quests and may be null
+  for a sponsored quest not yet classified. Allowed values (enforced by a CHECK):
+  `fitness_and_recreation`, `food_and_beverage`, `arts_and_culture`,
+  `education_and_books`, `health_and_wellness`, `retail`,
+  `events_and_entertainment`, `community_and_nonprofit`.
+- It describes the sponsor, not the activity: `category` stays the quest's
+  activity category (Food, Movement...).
+- To end a campaign, set `is_active = false`; do not flip `is_sponsored`, or BQ12
+  would count the campaign's past impressions as non-sponsored.
+
 ## Quest photo proof
 
 Migration `009_quest_photo_proofs.sql` creates the private `quest-proofs` Storage bucket
